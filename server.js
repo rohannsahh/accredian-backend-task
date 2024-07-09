@@ -14,17 +14,14 @@ const PORT = process.env.PORT || 5000;
 app.use(cors());
 app.use(express.json());
 
-// Endpoint to handle referral form submission
 app.post('/api/referrals', async (req, res) => {
   const { referrerName, referrerEmail, referrerMobile, refereeName, refereeEmail, refereeMobile } = req.body;
 
-  // Validate input data
   if (!referrerName || !referrerEmail || !referrerMobile || !refereeName || !refereeEmail || !refereeMobile) {
     return res.status(400).json({ error: 'All fields are required' });
   }
 
   try {
-    // Save referral data to the database
     const referral = await prisma.referral.create({
       data: {
         referrerName,
@@ -36,7 +33,6 @@ app.post('/api/referrals', async (req, res) => {
       },
     });
 
-    // Send referral email
     await sendReferralEmail(referral);
 
     res.status(201).json(referral);
@@ -46,7 +42,7 @@ app.post('/api/referrals', async (req, res) => {
   }
 });
 
-// Function to send referral email using nodemailer and Google Mail Service API
+// nodemailer and Google Mail Service API
 
 
 const oauth2Client = new google.auth.OAuth2(
